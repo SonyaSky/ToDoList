@@ -1,0 +1,10 @@
+{
+  "ExpandedNodes": [
+    "",
+    "\\api",
+    "\\api\\Dtos",
+    "\\api\\Mappers"
+  ],
+  "SelectedNode": "\\api\\Dtos\\CreateTaskRequestDto.cs",
+  "PreviewInSolutionExplorer": false
+}
