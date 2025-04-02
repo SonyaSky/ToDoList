@@ -1,0 +1,65 @@
+table {
+    border-collapse: collapse;
+    border: 2px solid #4F48EC;
+    background-color: #fff;
+    border-radius: 18px;
+    border-spacing: 0;
+    overflow: hidden;
+    width: 100%;
+    margin: 0 auto;
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    box-shadow: 4px 4px rgba(0, 0, 0, 15%);
+}
+
+
+thead {
+    background-color: #4F48EC;
+    color: #fff;
+    font-size: 24px;
+}
+  
+th, td {
+    border: 2px solid rgb(0, 0, 0);
+    padding: 5px 10px;
+    font-size: 20px;
+    font-weight: 700;
+}
+   
+.fixed {
+    width: 130px;
+    text-align: center;
+}
+
+.breaking-words {
+    word-wrap:break-word;
+    overflow-wrap: break-word;
+    max-width: 500px;
+    font-weight: 400;
+}
+
+.image-div {
+    display: flex;
+    place-content: center;
+    gap: 3px;
+}
+.check {
+    width: 40px;
+    height: 40px;
+}
+
+.unchecked {
+    width: 30px;
+    height: 29px;
+    border: 6px solid #000;
+    border-radius: 12px;
+}
+
+.image {
+    width: 40px;
+    height: 40px;
+    transition: 0.2s ease;
+}
+
+.image:hover {
+    transform: scale(1.1);
+}
