@@ -7,8 +7,8 @@ const data = [
         id: '2',
         name: "To do smth",
         description: "To do something",
-        status: "Active",
-        priority: "Medium",
+        status: "active",
+        priority: "medium",
         deadline: "03.05.2025",
         checked: true
     },
@@ -16,8 +16,8 @@ const data = [
         id: '3',
         name: "Todosmthsdkhfsjkdvskjdvksjvssdfsdfsdfsdfsdfsdhfcbjhbsdhfgsjcbsnbdsdhcksjbcnxzbcmksdhksdchksjcbksjbcbsdchs",
         description: "To do something",
-        status: "Completed",
-        priority: "Low",
+        status: "completed",
+        priority: "low",
         deadline: "03.05.2025",
         checked: true
     },
@@ -25,8 +25,8 @@ const data = [
         id: '4',
         name: "To do smth",
         description: "To do something",
-        status: "Overdue",
-        priority: "High",
+        status: "overdue",
+        priority: "high",
         deadline: "03.05.2025",
         checked: false
     },
@@ -34,8 +34,8 @@ const data = [
         id: '5',
         name: "To do smth",
         description: "To do something",
-        status: "Late",
-        priority: "Critical",
+        status: "late",
+        priority: "critical",
         deadline: "03.05.2025",
         checked: false
     },
@@ -44,6 +44,15 @@ const data = [
 
 const Table = () => {
     const [tasks, setTasks] = useState(data);
+
+    const CheckTask = (id) => {
+        setTasks(prevTasks =>
+            prevTasks.map(task =>
+                task.id === id ? { ...task, checked: !task.checked } : task
+            )
+        );
+    }
+
     return (
         <div className="table-div">
             <table>
@@ -61,18 +70,19 @@ const Table = () => {
                 {tasks.map((task) => (
                     <tr key={task.id}>
                     <td scope="row"><div className="image-div">
-                    {task.checked ? <img className="check" src="check.png"/> : <div className="unchecked"/>}
+                    {task.checked ? 
+                    <img className="check" src="check.png" onClick={() => CheckTask(task.id)}/> : 
+                    <div className="unchecked" onClick={() => CheckTask(task.id)}/>}
                         </div>
                     </td>
                     <td className="breaking-words">{task.name}</td>
-                    <td>{task.status}</td>
-                    <td>{task.priority}</td>
+                    <td className={`${task.status} colorful`}>{task.status}</td>
+                    <td className={`${task.priority} colorful`}>{task.priority}</td>
                     <td>{task.deadline}</td>
                     <td>
                         <div className="image-div">
                             <img className="image" src="edit.png"></img>
                             <img className="image" src="delete.png"></img>
-
                         </div>
                     </td>
                     </tr>

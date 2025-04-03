@@ -3,6 +3,7 @@
   margin: 0 auto;
   padding: 2rem;
   text-align: center;
+  font-family: Georgia, 'Times New Roman', Times, serif;
 }
 
 body {
@@ -15,4 +16,11 @@ body {
 
 .read-the-docs {
   color: #888;
+}
+
+.task-list {
+  text-align: left;
+  font-size: 64px;
+  font-weight: 700;
+  color: #000;
 }

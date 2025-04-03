@@ -7,7 +7,6 @@ table {
     overflow: hidden;
     width: 100%;
     margin: 0 auto;
-    font-family: Georgia, 'Times New Roman', Times, serif;
     box-shadow: 4px 4px rgba(0, 0, 0, 15%);
 }
 
@@ -42,16 +41,18 @@ th, td {
     place-content: center;
     gap: 3px;
 }
+
 .check {
     width: 40px;
     height: 40px;
 }
 
 .unchecked {
-    width: 30px;
-    height: 29px;
+    width: 40px;
+    height: 40px;
     border: 6px solid #000;
     border-radius: 12px;
+    box-sizing: border-box;
 }
 
 .image {
@@ -62,4 +63,20 @@ th, td {
 
 .image:hover {
     transform: scale(1.1);
+}
+
+.colorful {
+    text-transform: capitalize;
+}
+
+.low, .completed {
+    color: #008F1F;
+}
+
+.overdue, .high {
+    color: #FF7700;
+}
+
+.late, .critical {
+    color: #FF0000;
 }
