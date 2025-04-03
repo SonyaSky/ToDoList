@@ -1,14 +1,14 @@
-import { useState } from 'react'
+import React from 'react'
 
 import './App.css'
 import Table from './components/Table/Table'
 import CreateButton from './components/CreateModal/CreateModal'
+import { TasksProvider } from './context/TasksContext'
 
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
-    <div className="app-div">
+    <TasksProvider>
+      <div className="app-div">
       <div className="row">
         <div className='task-list col'>
           Список дел
@@ -19,6 +19,7 @@ function App() {
       </div>
       <Table/>
     </div>
+    </TasksProvider>
   )
 }
 

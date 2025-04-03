@@ -1,57 +1,10 @@
 import React, {useState} from "react";
 
 import './table.css';
-
-const data = [
-    {
-        id: '2',
-        name: "To do smth",
-        description: "To do something",
-        status: "active",
-        priority: "medium",
-        deadline: "03.05.2025",
-        checked: true
-    },
-    {
-        id: '3',
-        name: "Todosmthsdkhfsjkdvskjdvksjvssdfsdfsdfsdfsdfsdhfcbjhbsdhfgsjcbsnbdsdhcksjbcnxzbcmksdhksdchksjcbksjbcbsdchs",
-        description: "To do something",
-        status: "completed",
-        priority: "low",
-        deadline: "03.05.2025",
-        checked: true
-    },
-    {
-        id: '4',
-        name: "To do smth",
-        description: "To do something",
-        status: "overdue",
-        priority: "high",
-        deadline: "03.05.2025",
-        checked: false
-    },
-    {
-        id: '5',
-        name: "To do smth",
-        description: "To do something",
-        status: "late",
-        priority: "critical",
-        deadline: "03.05.2025",
-        checked: false
-    },
-]
-
+import { useTasks } from "../../context/TasksContext";
 
 const Table = () => {
-    const [tasks, setTasks] = useState(data);
-
-    const CheckTask = (id) => {
-        setTasks(prevTasks =>
-            prevTasks.map(task =>
-                task.id === id ? { ...task, checked: !task.checked } : task
-            )
-        );
-    }
+    const {tasks, CheckTask, DeleteTask} = useTasks();
 
     return (
         <div className="table-div">
@@ -82,7 +35,7 @@ const Table = () => {
                     <td>
                         <div className="image-div">
                             <img className="image" src="edit.png"></img>
-                            <img className="image" src="delete.png"></img>
+                            <img className="image" src="delete.png" onClick={() => DeleteTask(task.id)}></img>
                         </div>
                     </td>
                     </tr>

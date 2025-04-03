@@ -6,7 +6,6 @@ table {
     border-spacing: 0;
     overflow: hidden;
     width: 100%;
-    margin: 0 auto;
     box-shadow: 4px 4px rgba(0, 0, 0, 15%);
 }
 
@@ -32,6 +31,7 @@ th, td {
 .breaking-words {
     word-wrap:break-word;
     overflow-wrap: break-word;
+    width: 30%rem;
     max-width: 500px;
     font-weight: 400;
 }
@@ -69,14 +69,14 @@ th, td {
     text-transform: capitalize;
 }
 
-.low, .completed {
+.Low, .Completed {
     color: #008F1F;
 }
 
-.overdue, .high {
+.Overdue, .High {
     color: #FF7700;
 }
 
-.late, .critical {
+.Late, .Critical {
     color: #FF0000;
 }

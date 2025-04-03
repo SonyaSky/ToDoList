@@ -5,9 +5,14 @@
     background-color: #4F48EC;
     border-radius: 18px;
     cursor: pointer;
-    transition: 0.3s;
+    transition: 0.2s ease;
     box-shadow: 3px 4px 0 rgba(0, 0, 0, 0.15);
 }
+
+.create-btn:hover {
+    transform: scale(1.05);
+}
+
 .bp {
     padding: 0.6rem 2rem;
 }
