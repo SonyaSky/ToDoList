@@ -2,7 +2,7 @@ import React from 'react'
 
 import './App.css'
 import Table from './components/Table/Table'
-import CreateButton from './components/CreateModal/CreateModal'
+import CreateButton from './components/TaskModal/CreateButton'
 import { TasksProvider } from './context/TasksContext'
 
 function App() {

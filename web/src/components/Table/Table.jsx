@@ -2,6 +2,7 @@ import React, {useState} from "react";
 
 import './table.css';
 import { useTasks } from "../../context/TasksContext";
+import EditButton from "../TaskModal/EditButton";
 
 const Table = () => {
     const {tasks, CheckTask, DeleteTask} = useTasks();
@@ -34,7 +35,7 @@ const Table = () => {
                     <td>{task.deadline}</td>
                     <td>
                         <div className="image-div">
-                            <img className="image" src="edit.png"></img>
+                            <EditButton task={task}/>
                             <img className="image" src="delete.png" onClick={() => DeleteTask(task.id)}></img>
                         </div>
                     </td>

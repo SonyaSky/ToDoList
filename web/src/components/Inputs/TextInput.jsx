@@ -3,11 +3,11 @@ import Form from 'react-bootstrap/Form';
 
 import './textInput.css';
 
-const TextInput = ({type, placeholder, title, as, required, onChange}) => {
+const TextInput = ({type, placeholder, title, as, required, onChange, value}) => {
     return (
           <Form.Group className="mb-3 group" >
             <Form.Label className="label">{title}</Form.Label>
-            <Form.Control onChange={onChange} required={required} className="text-input" {...(as == null ? { type: type } : { as: as })}  placeholder={placeholder} />
+            <Form.Control value={value} onChange={onChange} required={required} className="text-input" {...(as == null ? { type: type } : { as: as })}  placeholder={placeholder} />
           </Form.Group>
       );
 }

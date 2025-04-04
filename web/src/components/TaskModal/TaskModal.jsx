@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useState, useEffect} from "react";
 import Form from 'react-bootstrap/Form';
 import Modal from 'react-bootstrap/Modal';
 import Col from 'react-bootstrap/Col';
@@ -10,16 +10,22 @@ import Select from "../Inputs/Select";
 import { useTasks } from "../../context/TasksContext";
 
 const priorities = ["Low","Medium", "High", "Critical"]
+const emptyTask = {
+    name: "",
+    description: "",
+    deadline: "",
+    priority: "Medium"
+}
 
-function MyVerticallyCenteredModal(props) {
-    const [task, setTask] = useState({
-        name: "",
-        description: "",
-        deadline: "",
-        priority: "Medium"
-    });
+function TaskModal({ show, onHide, baseTask, title, buttonName, buttonFunction }) {
+    const { EditTask, AddTask } = useTasks();
+    const [task, setTask] = useState(emptyTask);
 
-    const {AddTask} = useTasks();
+    useEffect(() => {
+        if (baseTask) {
+            setTask(baseTask); 
+        }
+    }, [baseTask]);
 
     const ChangeTask = (type) => (e) => {
         const value = e.target.value;
@@ -29,16 +35,23 @@ function MyVerticallyCenteredModal(props) {
         }));
     };
 
-    const CreateTask = (e) => {
+    const EditTaskFunc = (e) => {
         e.preventDefault();
-        console.log(task);
+        EditTask(task);
+        onHide();
+    };
+
+    const AddTaskFunc = (e) => {
+        e.preventDefault();
         AddTask(task);
-        props.onHide();
+        setTask(emptyTask);
+        onHide();
     };
 
     return (
         <Modal
-            {...props}
+            show={show}
+            onHide={onHide}
             size="lg"
             aria-labelledby="contained-modal-title-vcenter"
             centered
@@ -46,15 +59,16 @@ function MyVerticallyCenteredModal(props) {
         >
             <Modal.Header closeButton className="modal-header">
                 <Modal.Title className="title">
-                    Новое дело
+                    {title}
                 </Modal.Title>
             </Modal.Header>
             <Modal.Body className="modal-body">
-                <Form onSubmit={CreateTask}>
+                <Form onSubmit={(buttonFunction === "edit" ? EditTaskFunc : AddTaskFunc)}>
                     <TextInput
                         type="text"
                         placeholder="Название"
                         title="Название"
+                        value={task.name}
                         required
                         onChange={ChangeTask("name")}
                     />
@@ -62,6 +76,7 @@ function MyVerticallyCenteredModal(props) {
                         as="textarea"
                         placeholder="Описание дела"
                         title="Описание"
+                        value={task.description}
                         onChange={ChangeTask("description")}
                     />
                     <Row>
@@ -69,6 +84,7 @@ function MyVerticallyCenteredModal(props) {
                             <TextInput
                                 type="date"
                                 title="Дедлайн"
+                                value={task.deadline}
                                 onChange={ChangeTask("deadline")}
                             />
                         </Col>
@@ -76,6 +92,7 @@ function MyVerticallyCenteredModal(props) {
                             <Select
                                 title="Приоритет"
                                 options={priorities}
+                                value={task.priority}
                                 onChange={(selectedOption) => {
                                     setTask(prevTask => ({
                                         ...prevTask,
@@ -87,7 +104,7 @@ function MyVerticallyCenteredModal(props) {
                     </Row>
                     <div className="d-flex justify-content-end">
                         <button className='create-btn bp' type="submit">
-                            Создать
+                            {buttonName}
                         </button>
                     </div>
                 </Form>
@@ -96,20 +113,6 @@ function MyVerticallyCenteredModal(props) {
     );
 }
 
-const CreateButton = () => {
-    const [modalShow, setModalShow] = useState(false);
-    return (
-        <>
-            <button className='create-btn' onClick={() => setModalShow(true)}>
-                Добавить
-            </button>
 
-            <MyVerticallyCenteredModal
-                show={modalShow}
-                onHide={() => setModalShow(false)}
-            />
-        </>
-    );
-}
 
-export default CreateButton;
+export default TaskModal;
