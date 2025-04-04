@@ -7,7 +7,7 @@ import ViewLink from "../ViewModal/ViewModal";
 
 const Table = () => {
     const {tasks, CheckTask, DeleteTask} = useTasks();
-
+    if (tasks.length != 0) {
     return (
         <div className="table-div">
             <table>
@@ -38,7 +38,7 @@ const Table = () => {
                     <td>{task.deadline}</td>
                     <td>
                         <div className="image-div">
-                            <EditButton task={task}/>
+                            <EditButton task={task} />
                             <img className="image" src="delete.png" onClick={() => DeleteTask(task.id)}></img>
                         </div>
                     </td>
@@ -47,7 +47,7 @@ const Table = () => {
             </tbody>
             </table>
         </div>
-    );
+    );}
 }
 
 export default Table;

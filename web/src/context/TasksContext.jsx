@@ -38,7 +38,24 @@ const data = [
         checked: false
     },
 ]
-
+const sorting = [
+    {
+        value: "DateDesc",
+        name: "По дате создания (сначала новые)"
+    },
+    {
+        value: "DateAsc",
+        name: "По дате создания (сначала старые)"
+    },
+    {
+        value: "PriorityDesc",
+        name: "По срочности (сначала срочные)"
+    },
+    {
+        value: "PriorityAsc",
+        name: "По срочности (сначала не срочные)"
+    }
+]
 
 export const TasksContext = createContext();
 

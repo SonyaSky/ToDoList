@@ -1,14 +1,10 @@
 import React, {useState} from "react";
-import Form from 'react-bootstrap/Form';
 import Modal from 'react-bootstrap/Modal';
 import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
 
 import './viewModal.css';
-import TextInput from "../Inputs/TextInput";
-import Select from "../Inputs/Select";
 
-const priorities = ["Low","Medium", "High", "Critical"]
 
 function ViewModal({ show, onHide, task}) {
 

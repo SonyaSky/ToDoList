@@ -14,6 +14,7 @@ const EditButton = ({task}) => {
                 show={modalShow}
                 onHide={() => setModalShow(false)}
                 baseTask={task}
+                title="Редактировать"
                 buttonName="Сохранить"
                 buttonFunction="edit"
             />
