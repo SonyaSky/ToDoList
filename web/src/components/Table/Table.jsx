@@ -3,6 +3,7 @@ import React, {useState} from "react";
 import './table.css';
 import { useTasks } from "../../context/TasksContext";
 import EditButton from "../TaskModal/EditButton";
+import ViewLink from "../ViewModal/ViewModal";
 
 const Table = () => {
     const {tasks, CheckTask, DeleteTask} = useTasks();
@@ -29,7 +30,9 @@ const Table = () => {
                     <div className="unchecked" onClick={() => CheckTask(task.id)}/>}
                         </div>
                     </td>
-                    <td className="breaking-words">{task.name}</td>
+                    <td className="breaking-words">
+                        <ViewLink task={task}/>
+                    </td>
                     <td className={`${task.status} colorful`}>{task.status}</td>
                     <td className={`${task.priority} colorful`}>{task.priority}</td>
                     <td>{task.deadline}</td>

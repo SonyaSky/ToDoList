@@ -1,0 +1,54 @@
+.custom-modal {
+    font-family: Georgia, 'Times New Roman', Times, serif;
+}
+
+.name-link {
+    color: #000;
+    cursor: pointer;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.name-link:hover {
+    color:#4F48EC;
+    
+}
+
+.task-name {
+    font-weight: 700;
+    font-size: 24px;
+    word-wrap:break-word;
+    overflow-wrap: break-word;
+    max-width: 90%;
+    padding: 1rem 0.5rem;
+}
+
+.task-desc {
+    font-size: 16px;
+    word-wrap:break-word;
+    overflow-wrap: break-word;
+    padding: 1rem 0.5rem;
+}
+
+.task-info {
+    padding: 0.5rem 0.5rem;
+}
+
+.deadline {
+    padding: 0rem 0.5rem 0.5rem 0.5rem;
+}
+
+.type {
+    color: #4F48EC;
+    font-weight: 700;
+    font-size: 20px;
+    justify-content: end;
+}
+
+.value {
+    font-size: 18px;
+    font-weight: bold;
+    display: flex;
+    justify-content: end;
+    padding-right: 2rem;
+}

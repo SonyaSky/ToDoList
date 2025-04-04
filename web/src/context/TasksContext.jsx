@@ -48,7 +48,7 @@ export const TasksProvider = ({children}) => {
     const AddTask = (task) => {
         task = {
             ...task,
-            status: "active",
+            status: "Active",
             id: tasks.length + 1
         }
         //here will be sending task to api and receiving normal task
