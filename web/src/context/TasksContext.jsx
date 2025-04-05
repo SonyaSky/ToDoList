@@ -95,8 +95,13 @@ export const TasksProvider = ({children}) => {
         }));
     }
 
+    const FilterTasks = (filters) => {
+        //sending filters to api
+        setTasks(tasks);
+    }
+
     return (
-        <TasksContext.Provider value={{tasks, AddTask, DeleteTask, EditTask, setTasks, CheckTask}}>
+        <TasksContext.Provider value={{tasks, AddTask, DeleteTask, EditTask, setTasks, CheckTask, FilterTasks}}>
             {children}
         </TasksContext.Provider>
     )

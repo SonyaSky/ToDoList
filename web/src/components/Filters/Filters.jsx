@@ -1,10 +1,12 @@
 import React, {useState} from "react";
 import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
+import Form from 'react-bootstrap/Form';
 
 import './filters.css';
 import TextInput from "../Inputs/TextInput";
 import Select from "../Inputs/Select";
+import { useTasks } from "../../context/TasksContext";
 
 const statuses = ["All", "Active","Completed", "Overdue", "Late"]
 const sorting = ["По дате создания (сначала новые)", 
@@ -14,11 +16,13 @@ const sorting = ["По дате создания (сначала новые)",
 ]
 
 const Filters = () => {
+    const {FilterTasks} = useTasks();
     const [filters, setFilters] = useState({
         name: "",
         status: "All",
         sorting: statuses[0]
     });
+
     const ChangeFilters = (type) => (e) => {
         const value = e.target.value;
         setFilters(prevTask => ({
@@ -26,11 +30,19 @@ const Filters = () => {
             [type]: value
         }));
     };
+
+    const SendFilters = (e) => {
+        e.preventDefault();
+        FilterTasks(filters);
+        console.log(filters);
+    }
+
     return (
         <div className="filters">
             <div className="filters-name">
                 Фильтры и сортировки
             </div>
+            <Form onSubmit={SendFilters}>
             <Row className="filters-row">
                 <Col className="col-5">
                     <TextInput 
@@ -64,11 +76,12 @@ const Filters = () => {
                     }}/>
                 </Col>
                 <Col className="col-12 d-flex justify-content-end">
-                    <button className="create-btn bp">
+                    <button className="create-btn bp" type="submit">
                         Поиск
                     </button>
                 </Col>
             </Row>
+            </Form>
         </div>
     )
 }
