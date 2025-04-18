@@ -14,17 +14,23 @@ namespace api.Mappers
             return new TaskDto
             {
                 Id = taskModel.Id,
-                Text = taskModel.Text,
-                IsChecked = taskModel.IsChecked
+                Name = taskModel.Name,
+                IsChecked = taskModel.IsChecked,
+                Description = taskModel.Description,
+                Deadline = taskModel.Deadline,
+                Priority = taskModel.Priority,
             };
         }
 
-        public static TaskElement ToTaskFromCreateDto(this CreateTaskRequestDto taskDto)
+        public static TaskElement ToTaskFromCreateDto(this CreateTaskDto taskModel)
         {
             return new TaskElement
             {
-                Text = taskDto.Text,
-                IsChecked = taskDto.IsChecked
+                Id = new Guid(),
+                Name = taskModel.Name,
+                Description = taskModel.Description,
+                Deadline = taskModel.Deadline,
+                Priority = taskModel.Priority ?? Priority.Medium
             };
         }
 

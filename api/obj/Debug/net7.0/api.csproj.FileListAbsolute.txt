@@ -160,3 +160,7 @@ D:\Соня\VS Code\ToDoList\api\bin\Debug\net7.0\out\out\api.deps.json
 D:\Соня\VS Code\ToDoList\api\bin\Debug\net7.0\out\out\api.runtimeconfig.json
 D:\Соня\VS Code\ToDoList\api\bin\Debug\net7.0\out\out\appsettings.Development.json
 D:\Соня\VS Code\ToDoList\api\bin\Debug\net7.0\out\out\appsettings.json
+D:\Соня\VS Code\ToDoList\api\bin\Debug\net7.0\api.staticwebassets.endpoints.json
+D:\Соня\VS Code\ToDoList\api\obj\Debug\net7.0\api.sourcelink.json
+D:\Соня\VS Code\ToDoList\api\obj\Debug\net7.0\staticwebassets.build.endpoints.json
+D:\Соня\VS Code\ToDoList\api\obj\Debug\net7.0\staticwebassets\msbuild.api.Microsoft.AspNetCore.StaticWebAssetEndpoints.props

@@ -10,6 +10,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.SqlServer;
 using api.Models;
 using Microsoft.AspNetCore.Cors;
+using api.Service;
 
 namespace api.Controllers
 {
@@ -19,105 +20,98 @@ namespace api.Controllers
 
     public class TaskController : ControllerBase
     {
-        private readonly ApplicationDBContext _context;
-        public TaskController(ApplicationDBContext context)
+        private readonly ITaskService _taskService;
+        public TaskController(ITaskService taskService)
         {
-            _context = context;
+            _taskService = taskService;
         }
 
         [HttpGet]
-        public IActionResult GetAll()
+        public async Task<IActionResult> GetAll()
         {
             Response.Headers.Add("Access-Control-Allow-Origin", "*");
             Response.Headers.Add("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
             Response.Headers.Add("Access-Control-Allow-Headers", "Content-Type, Accept, Accept-Language, Accept-Encoding");
-            var taskList = _context.TaskList.ToList()
-              .Select(t => t.ToTaskDto());
+            var taskList = await _taskService.GetAllTasks();
 
             return Ok(taskList);
         }
 
-
-        
         [HttpPost]
         [Route("post")]
-        public IActionResult Create([FromBody] CreateTaskRequestDto taskDto)
+        public async Task<IActionResult> Create([FromBody] CreateTaskDto taskDto)
         {
-            var taskModel = taskDto.ToTaskFromCreateDto();
-            _context.TaskList.Add(taskModel);
-            _context.SaveChanges();
             Response.Headers.Add("Access-Control-Allow-Origin", "*");
             Response.Headers.Add("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
             Response.Headers.Add("Access-Control-Allow-Headers", "Content-Type, Accept, Accept-Language, Accept-Encoding");
-            return CreatedAtAction(nameof(GetAll), new { id = taskModel.Id}, taskModel.ToTaskDto());
+            
+            if (!ModelState.IsValid) return BadRequest(ModelState);
+            var taskModel = await _taskService.CreateTask(taskDto);
+            if (taskModel == null) {
+                return BadRequest("Couldn't create task");
+            }
+            return Ok(taskModel);
         }
-
-        // [HttpPost]
-        // [Route("list")]
-        // public IActionResult CreateMultiple([FromBody] List<CreateTaskRequestDto> taskDtos)
-        // {
-        //     _context.TaskList.RemoveRange(_context.TaskList);
-        //     _context.SaveChanges();
-        //     var taskModels = taskDtos.Select(dto => dto.ToTaskFromCreateDto()).ToList();
-        //     _context.TaskList.AddRange(taskModels);
-        //     _context.SaveChanges();
-        //     return CreatedAtAction(nameof(GetAll), taskModels.Select(t => t.ToTaskDto()));
-        // }
 
         [HttpPut]
         [Route("{id}")]
-        public IActionResult Update([FromRoute] int id, [FromBody] UpdateTaskRequestDto updateDto)
+        public async Task<IActionResult> Update([FromRoute] Guid id, [FromBody] UpdateTaskDto updateDto)
         {
-            var taskModel = _context.TaskList.FirstOrDefault(x => x.Id == id);
+            if (!ModelState.IsValid) return BadRequest(ModelState);
+            var taskModel = await _taskService.FindTask(id);
             if (taskModel == null)
             {
                 return NotFound();
             }
 
-            taskModel.Text = updateDto.Text;
-            taskModel.IsChecked = updateDto.IsChecked;
-            
-            _context.SaveChanges();
-
-            return Ok(taskModel.ToTaskDto());
+            var updatedTask = await _taskService.EditTask(updateDto, id);
+            if (updatedTask == null) {
+                return BadRequest("Couldn't edit task");
+            }
+            return Ok(updatedTask);
         }
 
         [HttpDelete]
         [Route("{id}")]
-        public IActionResult Delete([FromRoute] int id)
+        public async Task<IActionResult> Delete([FromRoute] Guid id)
         {
             Response.Headers.Add("Access-Control-Allow-Origin", "*");
             Response.Headers.Add("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
             Response.Headers.Add("Access-Control-Allow-Headers", "Content-Type, Accept, Accept-Language, Accept-Encoding");
-            var taskModel = _context.TaskList.FirstOrDefault(x => x.Id == id);
+            var taskModel = await _taskService.FindTask(id);
             if (taskModel == null)
             {
                 return NotFound();
             }
 
-            _context.TaskList.Remove(taskModel);
-            _context.SaveChanges();
-            return NoContent();
+            var idDeleted = await _taskService.DeleteTask(id);
+            if (!idDeleted) {
+                return BadRequest("Couldn't delete task");
+            }
+            return Ok();
         }
 
 
         [HttpPatch]
         [Route("{id}/toggle")]
-        public IActionResult ToggleCheck([FromRoute] int id)
+        public async Task<IActionResult> ToggleCheck([FromRoute] Guid id)
         {
             Response.Headers.Add("Access-Control-Allow-Origin", "*");
             Response.Headers.Add("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS, PATCH");
             Response.Headers.Add("Access-Control-Allow-Headers", "Content-Type, Accept, Accept-Language, Accept-Encoding");
 
-            var taskModel = _context.TaskList.FirstOrDefault(x => x.Id == id);
+            if (!ModelState.IsValid) return BadRequest(ModelState);
+            var taskModel = await _taskService.FindTask(id);
             if (taskModel == null)
             {
                 return NotFound();
             }
 
-            taskModel.IsChecked = !taskModel.IsChecked;
-            _context.SaveChanges();
-            return Ok(taskModel.ToTaskDto());
+            var updatedTask = await _taskService.ToggleTask(id);
+            if (updatedTask == null) {
+                return BadRequest("Couldn't toggle task");
+            }
+            return Ok(updatedTask);
         }
 
 

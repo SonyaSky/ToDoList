@@ -1,19 +1,20 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
+using api.Models;
 
-namespace api.Models
+namespace api.Dtos
 {
-    public class TaskElement
+    public class CreateTaskDto
     {
-        public Guid Id { get; set; }
+        [Required]
+        [MinLength(4, ErrorMessage = "Task's name should be at least 4 characters")]
         public string Name { get; set; } = string.Empty;
         public string? Description { get; set; }
         public bool IsChecked {get; set;} = false;
-        public Priority Priority { get; set; } = Priority.Medium;
+        public Priority? Priority { get; set; }
         public DateTime? Deadline { get; set; }
-        public DateTime CreateTime { get; set; } = DateTime.UtcNow;
-        public DateTime? UpdatedTime { get; set; } 
-    } 
+    }
 }

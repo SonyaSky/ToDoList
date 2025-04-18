@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.SqlServer;
 using api.Data;
 using Microsoft.AspNetCore.Cors;
+using api.Service;
 
 namespace ToDoList.api
 {
@@ -34,6 +35,8 @@ namespace ToDoList.api
                             .AllowAnyHeader();
                     });
             });
+
+            builder.Services.AddScoped<ITaskService, TaskService>();
 
             var app = builder.Build();
 

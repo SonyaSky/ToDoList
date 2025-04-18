@@ -28,7 +28,7 @@ const Table = () => {
                     {task.checked ? 
                     <img className="check" src="check.png" onClick={() => CheckTask(task.id)}/> : 
                     <div className="unchecked" onClick={() => CheckTask(task.id)}/>}
-                        </div>
+                    </div>
                     </td>
                     <td className="breaking-words">
                         <ViewLink task={task}/>
