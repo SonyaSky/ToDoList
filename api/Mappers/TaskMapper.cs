@@ -11,7 +11,7 @@ namespace api.Mappers
     {
         public static TaskDto ToTaskDto(this TaskElement taskModel)
         {
-            return new TaskDto
+            var task = new TaskDto
             {
                 Id = taskModel.Id,
                 Name = taskModel.Name,
@@ -20,6 +20,8 @@ namespace api.Mappers
                 Deadline = taskModel.Deadline,
                 Priority = taskModel.Priority,
             };
+            task.Status = taskModel.GetStatus();
+            return task;
         }
 
         public static TaskElement ToTaskFromCreateDto(this CreateTaskDto taskModel)
@@ -32,6 +34,39 @@ namespace api.Mappers
                 Deadline = taskModel.Deadline,
                 Priority = taskModel.Priority ?? Priority.Medium
             };
+        }
+
+        public static FullTaskDto ToFullTaskDto(this TaskElement taskModel)
+        {
+            var task = new FullTaskDto
+            {
+                Id = taskModel.Id,
+                Name = taskModel.Name,
+                IsChecked = taskModel.IsChecked,
+                Description = taskModel.Description,
+                Deadline = taskModel.Deadline,
+                Priority = taskModel.Priority,
+                CreateTime = taskModel.CreateTime,
+                UpdatedTime = taskModel.UpdatedTime
+            };
+            task.Status = taskModel.GetStatus();
+            return task;
+        }
+        public static Status GetStatus(this TaskElement task) 
+        {
+            if (DateTime.UtcNow < task.Deadline) {
+                if (task.IsChecked) {
+                    return Status.Completed;
+                } else {
+                    return Status.Active;
+                }
+            } else {
+                if (task.IsChecked) {
+                    return Status.Late;
+                } else {
+                    return Status.Overdue;
+                }
+            }
         }
 
 

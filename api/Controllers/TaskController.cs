@@ -15,7 +15,7 @@ using api.Service;
 namespace api.Controllers
 {
     
-    [Route("api/TaskElement")]
+    [Route("api/task")]
     [ApiController]
 
     public class TaskController : ControllerBase
@@ -26,19 +26,17 @@ namespace api.Controllers
             _taskService = taskService;
         }
 
-        [HttpGet]
+        [HttpGet("list")]
         public async Task<IActionResult> GetAll()
         {
             Response.Headers.Add("Access-Control-Allow-Origin", "*");
             Response.Headers.Add("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
             Response.Headers.Add("Access-Control-Allow-Headers", "Content-Type, Accept, Accept-Language, Accept-Encoding");
-            var taskList = await _taskService.GetAllTasks();
 
-            return Ok(taskList);
+            return await _taskService.GetAllTasks();
         }
 
         [HttpPost]
-        [Route("post")]
         public async Task<IActionResult> Create([FromBody] CreateTaskDto taskDto)
         {
             Response.Headers.Add("Access-Control-Allow-Origin", "*");
@@ -46,72 +44,44 @@ namespace api.Controllers
             Response.Headers.Add("Access-Control-Allow-Headers", "Content-Type, Accept, Accept-Language, Accept-Encoding");
             
             if (!ModelState.IsValid) return BadRequest(ModelState);
-            var taskModel = await _taskService.CreateTask(taskDto);
-            if (taskModel == null) {
-                return BadRequest("Couldn't create task");
-            }
-            return Ok(taskModel);
+            return await _taskService.CreateTask(taskDto);
         }
 
-        [HttpPut]
-        [Route("{id}")]
+        [HttpPut("{id}")]
         public async Task<IActionResult> Update([FromRoute] Guid id, [FromBody] UpdateTaskDto updateDto)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
-            var taskModel = await _taskService.FindTask(id);
-            if (taskModel == null)
-            {
-                return NotFound();
-            }
-
-            var updatedTask = await _taskService.EditTask(updateDto, id);
-            if (updatedTask == null) {
-                return BadRequest("Couldn't edit task");
-            }
-            return Ok(updatedTask);
+            return await _taskService.EditTask(updateDto, id);
         }
 
-        [HttpDelete]
-        [Route("{id}")]
+        [HttpDelete("{id}")]
         public async Task<IActionResult> Delete([FromRoute] Guid id)
         {
             Response.Headers.Add("Access-Control-Allow-Origin", "*");
             Response.Headers.Add("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
             Response.Headers.Add("Access-Control-Allow-Headers", "Content-Type, Accept, Accept-Language, Accept-Encoding");
-            var taskModel = await _taskService.FindTask(id);
-            if (taskModel == null)
-            {
-                return NotFound();
-            }
-
-            var idDeleted = await _taskService.DeleteTask(id);
-            if (!idDeleted) {
-                return BadRequest("Couldn't delete task");
-            }
-            return Ok();
+            
+            return await _taskService.DeleteTask(id);
+        }
+        
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetTask([FromRoute] Guid id) {
+            Response.Headers.Add("Access-Control-Allow-Origin", "*");
+            Response.Headers.Add("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+            Response.Headers.Add("Access-Control-Allow-Headers", "Content-Type, Accept, Accept-Language, Accept-Encoding");
+            
+            return await _taskService.GetFullTask(id);
         }
 
 
-        [HttpPatch]
-        [Route("{id}/toggle")]
+        [HttpPatch("{id}/toggle")]
         public async Task<IActionResult> ToggleCheck([FromRoute] Guid id)
         {
             Response.Headers.Add("Access-Control-Allow-Origin", "*");
             Response.Headers.Add("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS, PATCH");
             Response.Headers.Add("Access-Control-Allow-Headers", "Content-Type, Accept, Accept-Language, Accept-Encoding");
 
-            if (!ModelState.IsValid) return BadRequest(ModelState);
-            var taskModel = await _taskService.FindTask(id);
-            if (taskModel == null)
-            {
-                return NotFound();
-            }
-
-            var updatedTask = await _taskService.ToggleTask(id);
-            if (updatedTask == null) {
-                return BadRequest("Couldn't toggle task");
-            }
-            return Ok(updatedTask);
+            return await _taskService.ToggleTask(id);
         }
 
 

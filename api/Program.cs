@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore.SqlServer;
 using api.Data;
 using Microsoft.AspNetCore.Cors;
 using api.Service;
+using System.Text.Json.Serialization;
 
 namespace ToDoList.api
 {
@@ -21,6 +22,12 @@ namespace ToDoList.api
             builder.Services.AddControllers();
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
+
+            builder.Services.AddControllers()
+                .AddJsonOptions(options =>
+                {
+                    options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+                });
 
             builder.Services.AddDbContext<ApplicationDBContext>(options =>
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
