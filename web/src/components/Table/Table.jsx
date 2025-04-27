@@ -4,6 +4,7 @@ import './table.css';
 import { useTasks } from "../../context/TasksContext";
 import EditButton from "../TaskModal/EditButton";
 import ViewLink from "../ViewModal/ViewModal";
+import { formatDate } from "../../helpers/formatDate";
 
 const Table = () => {
     const {tasks, CheckTask, DeleteTask} = useTasks();
@@ -25,17 +26,17 @@ const Table = () => {
                 {tasks.map((task) => (
                     <tr key={task.id}>
                     <td scope="row"><div className="image-div">
-                    {task.checked ? 
+                    {task.isChecked ? 
                     <img className="check" src="check.png" onClick={() => CheckTask(task.id)}/> : 
                     <div className="unchecked" onClick={() => CheckTask(task.id)}/>}
                     </div>
                     </td>
                     <td className="breaking-words">
-                        <ViewLink task={task}/>
+                        <ViewLink taskId={task.id}/>
                     </td>
                     <td className={`${task.status} colorful`}>{task.status}</td>
                     <td className={`${task.priority} colorful`}>{task.priority}</td>
-                    <td>{task.deadline}</td>
+                    <td>{formatDate(task.deadline)}</td>
                     <td>
                         <div className="image-div">
                             <EditButton task={task} />

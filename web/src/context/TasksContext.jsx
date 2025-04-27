@@ -1,4 +1,10 @@
-import { createContext, useState, useContext, React } from 'react';
+import { createContext, useState, useContext, React, useEffect } from 'react';
+
+import GetTasks from '../api/getTasks';
+import CreateTask from '../api/createTask';
+import ToggleTask from '../api/toggleTask';
+import DeleteTaskApi from '../api/DeleteTaskApi';
+import EditTaskApi from '../api/editTaskApi';
 
 const data = [
     {
@@ -60,36 +66,45 @@ const sorting = [
 export const TasksContext = createContext();
 
 export const TasksProvider = ({children}) => {
-    const [tasks, setTasks] = useState(data);
+    const [tasks, setTasks] = useState([]);
 
-    const AddTask = (task) => {
-        task = {
-            ...task,
-            status: "Active",
-            id: tasks.length + 1
-        }
-        //here will be sending task to api and receiving normal task
-        setTasks((prevTasks) => [task, ...prevTasks]);
+    useEffect(() => {
+        const fetchData = async () => {
+            const data = await GetTasks();
+            if (data) {
+                setTasks(data);
+                console.log(data);
+            }
+        };
+        fetchData();
+    }, []);
+
+    const AddTask = async (task) => {
+        const newTask = await CreateTask(task);
+        setTasks((prevTasks) => [newTask, ...prevTasks]);
     }
 
-    const CheckTask = (taskId) => {
+    const CheckTask = async (taskId) => {
+        const updatedTask = await ToggleTask(taskId);
+
         setTasks(prevTasks =>
             prevTasks.map(task =>
-                task.id === taskId ? { ...task, checked: !task.checked } : task
+                task.id === taskId ? updatedTask : task
             )
         );
     }
 
-    const DeleteTask = (taskId) => {
-        setTasks(prevTasks => prevTasks.filter(task => task.id !== taskId));
+    const DeleteTask = async (taskId) => {
+        var id = await DeleteTaskApi(taskId);
+        setTasks(prevTasks => prevTasks.filter(task => task.id !== id));
     }
 
-    const EditTask = (newTask) => {
-        //also sending a request and getting new task
+    const EditTask = async (newTask) => {
+        const apiTask = await EditTaskApi(newTask);
         setTasks((tasks) => tasks.map((task) => {
             if (task.id === newTask.id) {
-                task = newTask;
-                return newTask
+                task = apiTask;
+                return apiTask
             }
             return task;
         }));

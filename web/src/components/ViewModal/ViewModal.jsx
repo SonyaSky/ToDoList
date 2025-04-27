@@ -1,13 +1,14 @@
-import React, {useState} from "react";
+import React, {useState, useEffect} from "react";
 import Modal from 'react-bootstrap/Modal';
 import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
 
 import './viewModal.css';
+import GetFullTask from "../../api/getFullTask";
+import { formatDate } from "../../helpers/formatDate";
 
 
 function ViewModal({ show, onHide, task}) {
-
     return (
         <Modal
             show={show}
@@ -37,8 +38,7 @@ function ViewModal({ show, onHide, task}) {
                         Дата создания:
                     </Col>
                     <Col xs={4} xl={2} className="value d-flex align-items-end">
-                        {task.deadline} 
-                        {/* нужно потом нормальные поля вставить */}
+                        {formatDate(task.createTime)} 
                     </Col>
                     <Col xs={6} xl={3} className="type ">
                         Приоритет:
@@ -50,8 +50,7 @@ function ViewModal({ show, onHide, task}) {
                         Дата редактирования:
                     </Col>
                     <Col xs={4} xl={2} className="value d-flex align-items-end">
-                        {task.deadline} 
-                        {/* нужно потом нормальные поля вставить */}
+                        {task.updatedTime == null ? "null" : formatDate(task.updatedTime)} 
                     </Col>
                 </Row>
                 {task.deadline && ( 
@@ -60,7 +59,7 @@ function ViewModal({ show, onHide, task}) {
                         Дедлайн:
                     </Col>
                     <Col xs={6} xl={3} className="value d-flex align-items-end">
-                        {task.deadline}
+                        {formatDate(task.deadline)}
                     </Col>
                 </Row>
             )}
@@ -69,8 +68,20 @@ function ViewModal({ show, onHide, task}) {
     );
 }
 
-const ViewLink = ({task}) => {
+const ViewLink = ({taskId}) => {
     const [modalShow, setModalShow] = useState(false);
+    const [task, setTask] = useState(null);
+    useEffect(() => {
+        const fetchData = async () => {
+            const data = await GetFullTask(taskId);
+            if (data) {
+                setTask(data);
+            }
+        };
+        fetchData();
+    }, []);
+
+    if (task != null)
     return (
         <>
           <a className='name-link' onClick={() => setModalShow(true)}>

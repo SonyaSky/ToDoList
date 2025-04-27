@@ -84,7 +84,7 @@ function TaskModal({ show, onHide, baseTask, title, buttonName, buttonFunction }
                             <TextInput
                                 type="date"
                                 title="Дедлайн"
-                                value={task.deadline}
+                                value={task.deadline ? new Date(task.deadline).toISOString().split('T')[0] : ''}
                                 onChange={ChangeTask("deadline")}
                             />
                         </Col>
