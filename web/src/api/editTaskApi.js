@@ -1,8 +1,8 @@
 import {BASE_URL} from './BASE_URL'
 
-async function EditTaskApi(newTask) {
+async function EditTaskApi(newTask, id) {
     try {
-        const res = await fetch(BASE_URL + newTask.id, {
+        const res = await fetch(BASE_URL + id, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json'

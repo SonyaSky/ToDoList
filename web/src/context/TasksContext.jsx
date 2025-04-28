@@ -80,6 +80,7 @@ export const TasksProvider = ({children}) => {
     }, []);
 
     const AddTask = async (task) => {
+        task.deadline = task.deadline === '' ? null : task.deadline;
         const newTask = await CreateTask(task);
         setTasks((prevTasks) => [newTask, ...prevTasks]);
     }
@@ -99,15 +100,14 @@ export const TasksProvider = ({children}) => {
         setTasks(prevTasks => prevTasks.filter(task => task.id !== id));
     }
 
-    const EditTask = async (newTask) => {
-        const apiTask = await EditTaskApi(newTask);
-        setTasks((tasks) => tasks.map((task) => {
-            if (task.id === newTask.id) {
-                task = apiTask;
-                return apiTask
-            }
-            return task;
-        }));
+    const EditTask = async (newTask, id) => {
+        newTask.deadline = newTask.deadline === '' ? null : newTask.deadline;
+        const apiTask = await EditTaskApi(newTask, id);
+        setTasks(prevTasks =>
+            prevTasks.map(task =>
+                task.id === id ? apiTask : task
+            )
+        );
     }
 
     const FilterTasks = (filters) => {

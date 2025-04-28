@@ -8,13 +8,14 @@ import './createModal.css';
 import TextInput from "../Inputs/TextInput";
 import Select from "../Inputs/Select";
 import { useTasks } from "../../context/TasksContext";
+import { formatDateForInput } from "../../helpers/formatDateForInput";
 
-const priorities = ["Low","Medium", "High", "Critical"]
+const priorities = ["", "Low","Medium", "High", "Critical"]
 const emptyTask = {
     name: "",
     description: "",
     deadline: "",
-    priority: "Medium"
+    priority: null
 }
 
 function TaskModal({ show, onHide, baseTask, title, buttonName, buttonFunction }) {
@@ -37,12 +38,14 @@ function TaskModal({ show, onHide, baseTask, title, buttonName, buttonFunction }
 
     const EditTaskFunc = (e) => {
         e.preventDefault();
-        EditTask(task);
+        console.log(task);
+        EditTask(task, task.id);
         onHide();
     };
 
     const AddTaskFunc = (e) => {
         e.preventDefault();
+        console.log(task);
         AddTask(task);
         setTask(emptyTask);
         onHide();
@@ -84,7 +87,7 @@ function TaskModal({ show, onHide, baseTask, title, buttonName, buttonFunction }
                             <TextInput
                                 type="date"
                                 title="Дедлайн"
-                                value={task.deadline ? new Date(task.deadline).toISOString().split('T')[0] : ''}
+                                value={task.deadline ? formatDateForInput(task.deadline) : ''}
                                 onChange={ChangeTask("deadline")}
                             />
                         </Col>
@@ -96,7 +99,7 @@ function TaskModal({ show, onHide, baseTask, title, buttonName, buttonFunction }
                                 onChange={(selectedOption) => {
                                     setTask(prevTask => ({
                                         ...prevTask,
-                                        priority: selectedOption.value
+                                        priority: selectedOption.value === "" ? null : selectedOption.value
                                     }));
                                 }}
                             />

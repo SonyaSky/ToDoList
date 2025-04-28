@@ -76,9 +76,19 @@ th, td {
 }
 
 .Overdue, .High {
-    color: #FF7700;
+    color: #ff7700;
 }
 
 .Late, .Critical {
-    color: #FF0000;
+    color: #ff0000;
+}
+
+
+
+.orange {
+    background-color: #ff770081;
+}
+
+.red {
+    background-color: #ff000081;
 }

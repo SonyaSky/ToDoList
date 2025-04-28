@@ -5,6 +5,7 @@ import { useTasks } from "../../context/TasksContext";
 import EditButton from "../TaskModal/EditButton";
 import ViewLink from "../ViewModal/ViewModal";
 import { formatDate } from "../../helpers/formatDate";
+import { deadlineStyle } from "../../helpers/deadlineStyle";
 
 const Table = () => {
     const {tasks, CheckTask, DeleteTask} = useTasks();
@@ -32,11 +33,11 @@ const Table = () => {
                     </div>
                     </td>
                     <td className="breaking-words">
-                        <ViewLink taskId={task.id}/>
+                        <ViewLink task={task}/>
                     </td>
                     <td className={`${task.status} colorful`}>{task.status}</td>
                     <td className={`${task.priority} colorful`}>{task.priority}</td>
-                    <td>{formatDate(task.deadline)}</td>
+                    <td className={deadlineStyle(task)}>{formatDate(task.deadline)}</td>
                     <td>
                         <div className="image-div">
                             <EditButton task={task} />

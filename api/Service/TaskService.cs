@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using api.Data;
 using api.Dtos;
@@ -21,10 +22,76 @@ namespace api.Service
 
         public async Task<IActionResult> CreateTask(CreateTaskDto taskDto)
         {
+            var (newName, priority) = await FindPriority(taskDto.Name, taskDto.Priority);
+            taskDto.Priority = priority;
+            (newName, var deadline) = await FindDeadline(newName, taskDto.Deadline);
+            taskDto.Deadline = deadline;
+            taskDto.Name = Regex.Replace(newName, @"\s+", " ").Trim();
+
             var task = taskDto.ToTaskFromCreateDto();
             await _context.TaskList.AddAsync(task);
             await _context.SaveChangesAsync();
             return new OkObjectResult(task.ToTaskDto());
+        }
+
+        private async Task<(string, Priority?)> FindPriority(string name, Priority? currentPriority) 
+        {
+            var priorities = new Dictionary<string, Priority>
+            {
+                { "!4", Priority.Low },
+                { "!3", Priority.Medium },
+                { "!2", Priority.High },
+                { "!1", Priority.Critical }
+
+            };
+            Priority? priority = null;
+            //проходимся по приоритетам по возрастанию приоритета, в итоге остается наибольший
+            foreach (var pair in priorities) {  
+                if (name.Contains(pair.Key)) {
+                    priority = pair.Value;
+                    name = name.Replace(pair.Key, "");
+                }
+            }
+            
+            if (currentPriority == null) {
+                return (name, priority);
+            }
+            return (name, currentPriority);
+        }
+
+        private async Task<(string, DateTime?)> FindDeadline(string name, DateTime? currentDeadline) 
+        {
+            Regex regex = new Regex(@"!before\s((0[1-9]|[12][0-9]|3[01])[-.](0[1-9]|1[0-2])[-.](\d{4}))");
+            MatchCollection matches = regex.Matches(name);
+
+            List<DateTime> validDates = new List<DateTime>();
+            List<string> validMacros = new List<string>();
+            foreach (Match match in matches)
+            {
+                string dateString = match.Groups[1].Value;
+                if (TryParseDate(dateString, out DateTime validDate)) {
+                    validDates.Add(validDate);
+                    validMacros.Add(match.Value);
+                }
+            }
+
+            foreach (var validMacro in validMacros)
+            {
+                name = name.Replace(validMacro, "").Trim();
+            }
+
+            if (validDates.Count > 0 && currentDeadline == null) {
+                return (name, validDates.Min());
+            }
+            return (name, currentDeadline);
+        }
+
+        private bool TryParseDate(string dateString, out DateTime date)
+        {
+            return DateTime.TryParseExact(dateString, new[] { "dd.MM.yyyy", "dd-MM-yyyy" }, 
+                                        System.Globalization.CultureInfo.InvariantCulture, 
+                                        System.Globalization.DateTimeStyles.None, 
+                                        out date);
         }
 
         public async Task<IActionResult> DeleteTask(Guid id)
@@ -50,11 +117,16 @@ namespace api.Service
                     Message = $"Task with id={id} wasn't found"
                 });
             }
-            task.Name = taskDto.Name;
+            
             task.Description = taskDto.Description;
-            task.Priority = taskDto.Priority ?? Priority.Medium;
-            task.Deadline = taskDto.Deadline;
             task.UpdatedTime = DateTime.UtcNow;
+
+            var (newName, priority) = await FindPriority(taskDto.Name, taskDto.Priority);
+            task.Priority = priority ?? Priority.Medium;
+            (newName, var deadline) = await FindDeadline(newName, taskDto.Deadline);
+            task.Deadline = deadline;
+            task.Name = Regex.Replace(newName, @"\s+", " ").Trim();
+            
             await _context.SaveChangesAsync();
             return new OkObjectResult(task.ToTaskDto()); 
         }

@@ -54,17 +54,17 @@ namespace api.Mappers
         }
         public static Status GetStatus(this TaskElement task) 
         {
-            if (DateTime.UtcNow < task.Deadline) {
-                if (task.IsChecked) {
-                    return Status.Completed;
-                } else {
-                    return Status.Active;
-                }
-            } else {
+            if (DateTime.UtcNow > task.Deadline) {
                 if (task.IsChecked) {
                     return Status.Late;
                 } else {
                     return Status.Overdue;
+                }
+            } else {
+                if (task.IsChecked) {
+                    return Status.Completed;
+                } else {
+                    return Status.Active;
                 }
             }
         }

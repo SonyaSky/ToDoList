@@ -68,20 +68,20 @@ function ViewModal({ show, onHide, task}) {
     );
 }
 
-const ViewLink = ({taskId}) => {
+const ViewLink = ({task}) => {
     const [modalShow, setModalShow] = useState(false);
-    const [task, setTask] = useState(null);
+    const [fullTask, setFullTask] = useState(null);
     useEffect(() => {
         const fetchData = async () => {
-            const data = await GetFullTask(taskId);
+            const data = await GetFullTask(task.id);
             if (data) {
-                setTask(data);
+                setFullTask(data);
             }
         };
         fetchData();
-    }, []);
+    }, [modalShow, task.id]);
 
-    if (task != null)
+    if (fullTask != null)
     return (
         <>
           <a className='name-link' onClick={() => setModalShow(true)}>
@@ -91,7 +91,7 @@ const ViewLink = ({taskId}) => {
           <ViewModal
             show={modalShow}
             onHide={() => setModalShow(false)}
-            task={task}
+            task={fullTask}
           />
         </>
       );
