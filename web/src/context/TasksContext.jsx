@@ -6,62 +6,11 @@ import ToggleTask from '../api/toggleTask';
 import DeleteTaskApi from '../api/DeleteTaskApi';
 import EditTaskApi from '../api/editTaskApi';
 
-const data = [
-    {
-        id: '1',
-        name: "To do smth",
-        description: "To do something",
-        status: "Active",
-        priority: "Medium",
-        deadline: "03.05.2025",
-        checked: true
-    },
-    {
-        id: '2',
-        name: "Todosmthsdkhfsjkdvskjdvksjvssdfsdfsdfsdfsdfsdhfcbjhbsdhfgsjcbsnbdsdhcksjbcnxzbcmksdhksdchksjcbksjbcbsdchs",
-        description: "To do something",
-        status: "Completed",
-        priority: "Low",
-        deadline: "03.05.2025",
-        checked: true
-    },
-    {
-        id: '3',
-        name: "To do smth",
-        description: "To do something",
-        status: "Overdue",
-        priority: "High",
-        deadline: "03.05.2025",
-        checked: false
-    },
-    {
-        id: '4',
-        name: "To do smth",
-        description: "To do something",
-        status: "Late",
-        priority: "Critical",
-        deadline: "03.05.2025",
-        checked: false
-    },
-]
-const sorting = [
-    {
-        value: "DateDesc",
-        name: "По дате создания (сначала новые)"
-    },
-    {
-        value: "DateAsc",
-        name: "По дате создания (сначала старые)"
-    },
-    {
-        value: "PriorityDesc",
-        name: "По срочности (сначала срочные)"
-    },
-    {
-        value: "PriorityAsc",
-        name: "По срочности (сначала не срочные)"
-    }
-]
+const baseQuery = {
+    name: "",
+    status: "",
+    sorting: 0
+}
 
 export const TasksContext = createContext();
 
@@ -70,7 +19,7 @@ export const TasksProvider = ({children}) => {
 
     useEffect(() => {
         const fetchData = async () => {
-            const data = await GetTasks();
+            const data = await GetTasks(baseQuery);
             if (data) {
                 setTasks(data);
                 console.log(data);
@@ -110,8 +59,8 @@ export const TasksProvider = ({children}) => {
         );
     }
 
-    const FilterTasks = (filters) => {
-        //sending filters to api
+    const FilterTasks = async (filters) => {
+        const tasks = await GetTasks(filters);
         setTasks(tasks);
     }
 

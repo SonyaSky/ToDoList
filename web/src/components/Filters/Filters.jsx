@@ -15,13 +15,15 @@ const sorting = ["По дате создания (сначала новые)",
 "По срочности (сначала не срочные)"
 ]
 
+
 const Filters = () => {
     const {FilterTasks} = useTasks();
     const [filters, setFilters] = useState({
         name: "",
-        status: "All",
-        sorting: statuses[0]
+        status: statuses[0],
+        sorting: sorting[0]
     });
+    
 
     const ChangeFilters = (type) => (e) => {
         const value = e.target.value;
@@ -33,7 +35,13 @@ const Filters = () => {
 
     const SendFilters = (e) => {
         e.preventDefault();
-        FilterTasks(filters);
+        const status = statuses.findIndex(status => status === filters.status);
+        const query = {
+            name: filters.name,
+            status: status == 0 ? "" : status - 1,
+            sorting: sorting.findIndex(sort => sort === filters.sorting)
+        }
+        FilterTasks(query);
         console.log(filters);
     }
 

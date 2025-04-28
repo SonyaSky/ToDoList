@@ -11,6 +11,7 @@ using Microsoft.EntityFrameworkCore.SqlServer;
 using api.Models;
 using Microsoft.AspNetCore.Cors;
 using api.Service;
+using api.Models.Query;
 
 namespace api.Controllers
 {
@@ -27,13 +28,13 @@ namespace api.Controllers
         }
 
         [HttpGet("list")]
-        public async Task<IActionResult> GetAll()
+        public async Task<IActionResult> GetAll([FromQuery] Query query)
         {
             Response.Headers.Add("Access-Control-Allow-Origin", "*");
             Response.Headers.Add("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
             Response.Headers.Add("Access-Control-Allow-Headers", "Content-Type, Accept, Accept-Language, Accept-Encoding");
 
-            return await _taskService.GetAllTasks();
+            return await _taskService.GetAllTasks(query);
         }
 
         [HttpPost]

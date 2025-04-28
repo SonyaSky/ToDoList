@@ -7,6 +7,7 @@ using api.Data;
 using api.Dtos;
 using api.Mappers;
 using api.Models;
+using api.Models.Query;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -126,7 +127,7 @@ namespace api.Service
             (newName, var deadline) = await FindDeadline(newName, taskDto.Deadline);
             task.Deadline = deadline;
             task.Name = Regex.Replace(newName, @"\s+", " ").Trim();
-            
+
             await _context.SaveChangesAsync();
             return new OkObjectResult(task.ToTaskDto()); 
         }
@@ -137,12 +138,42 @@ namespace api.Service
             return task;
         }
 
-        public async Task<IActionResult> GetAllTasks() //add query later
+        public async Task<IActionResult> GetAllTasks(Query query) 
         {
-            var tasks = await _context.TaskList
+            var tasks = _context.TaskList.AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(query.Name)) {
+                tasks = tasks.Where(t => t.Name.Contains(query.Name));
+            }
+
+            if (query.Sorting.HasValue)
+            {
+                if (query.Sorting == Sorting.PriorityAsc) 
+                {
+                    tasks = tasks.OrderBy(t => t.Priority);
+                }
+                if (query.Sorting == Sorting.PriorityDesc) 
+                {
+                    tasks = tasks.OrderByDescending(t => t.Priority);
+                }
+                if (query.Sorting == Sorting.CreateDateAsc) 
+                {
+                    tasks = tasks.OrderBy(t => t.CreateTime);
+                }
+                if (query.Sorting == Sorting.CreateDateDesc) 
+                {
+                    tasks = tasks.OrderByDescending(t => t.CreateTime);
+                }
+            }
+            var result = await tasks
                 .Select(t => t.ToTaskDto())
                 .ToListAsync();
-            return new OkObjectResult(tasks);
+
+            if (query.Status.HasValue) {
+                result = result.Where(t => t.Status == query.Status).ToList();
+            }
+
+            return new OkObjectResult(result);
         }
 
         public async Task<IActionResult> GetFullTask(Guid id)

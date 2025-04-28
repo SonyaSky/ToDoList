@@ -1,8 +1,9 @@
 import {BASE_URL} from './BASE_URL'
 
-async function GetTasks() {
+async function GetTasks(query) {
+    const queryString = new URLSearchParams(query).toString();
     try {
-        const res = await fetch(BASE_URL + "list", {
+        const res = await fetch(BASE_URL + "list?" + queryString, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json'
