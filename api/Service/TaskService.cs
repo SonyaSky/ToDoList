@@ -28,6 +28,12 @@ namespace api.Service
             (newName, var deadline) = await FindDeadline(newName, taskDto.Deadline);
             taskDto.Deadline = deadline;
             taskDto.Name = Regex.Replace(newName, @"\s+", " ").Trim();
+            if (taskDto.Name.Length < 4) {
+                return new BadRequestObjectResult(new ResponseModel {
+                    Status = "Error",
+                    Message = "Name should be at least 4 characters long"
+                });
+            }
 
             var task = taskDto.ToTaskFromCreateDto();
             await _context.TaskList.AddAsync(task);
@@ -118,15 +124,22 @@ namespace api.Service
                     Message = $"Task with id={id} wasn't found"
                 });
             }
-            
-            task.Description = taskDto.Description;
-            task.UpdatedTime = DateTime.UtcNow;
 
             var (newName, priority) = await FindPriority(taskDto.Name, taskDto.Priority);
-            task.Priority = priority ?? Priority.Medium;
             (newName, var deadline) = await FindDeadline(newName, taskDto.Deadline);
+            newName = Regex.Replace(newName, @"\s+", " ").Trim();
+            if (newName.Length < 4) {
+                return new BadRequestObjectResult(new ResponseModel {
+                    Status = "Error",
+                    Message = "Name should be at least 4 characters long"
+                });
+            }
+            task.Description = taskDto.Description;
+            task.UpdatedTime = DateTime.UtcNow;
+            task.Priority = priority ?? Priority.Medium;
             task.Deadline = deadline;
-            task.Name = Regex.Replace(newName, @"\s+", " ").Trim();
+            task.Name = newName;
+            
 
             await _context.SaveChangesAsync();
             return new OkObjectResult(task.ToTaskDto()); 

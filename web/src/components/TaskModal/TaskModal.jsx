@@ -21,6 +21,7 @@ const emptyTask = {
 function TaskModal({ show, onHide, baseTask, title, buttonName, buttonFunction }) {
     const { EditTask, AddTask } = useTasks();
     const [task, setTask] = useState(emptyTask);
+    const [error, setError] = useState("");
 
     useEffect(() => {
         if (baseTask) {
@@ -34,10 +35,18 @@ function TaskModal({ show, onHide, baseTask, title, buttonName, buttonFunction }
             ...prevTask,
             [type]: value
         }));
+
+        if (type === "name" && value.length >= 4) {
+            setError("");
+        }
     };
 
     const EditTaskFunc = (e) => {
         e.preventDefault();
+        if (task.name.length < 4) {
+            setError("Название должно содержать не менее 4 символов.");
+            return; 
+        }
         console.log(task);
         EditTask(task, task.id);
         onHide();
@@ -46,6 +55,10 @@ function TaskModal({ show, onHide, baseTask, title, buttonName, buttonFunction }
     const AddTaskFunc = (e) => {
         e.preventDefault();
         console.log(task);
+        if (task.name.length < 4) {
+            setError("Название должно содержать не менее 4 символов.");
+            return;
+        }
         AddTask(task);
         setTask(emptyTask);
         onHide();
@@ -75,6 +88,7 @@ function TaskModal({ show, onHide, baseTask, title, buttonName, buttonFunction }
                         required
                         onChange={ChangeTask("name")}
                     />
+                    {error && <div className="text-danger">{error}</div>}
                     <TextInput
                         as="textarea"
                         placeholder="Описание дела"

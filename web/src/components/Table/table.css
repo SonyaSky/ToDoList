@@ -24,6 +24,10 @@ th, td {
     font-size: 20px;
     font-weight: 700;
 }
+
+.check, .unchecked, .image {
+    cursor: pointer;
+}
    
 .fixed {
     width: fit-content;
